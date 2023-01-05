@@ -54,7 +54,7 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Setup Cache
       uses: ./.github/actions/setup_cache
@@ -110,4 +110,4 @@ jobs:
         cmake --build ./build --config ${{matrix.build_type}}
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2
