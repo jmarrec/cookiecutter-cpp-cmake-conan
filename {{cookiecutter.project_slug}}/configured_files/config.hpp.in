@@ -1,0 +1,14 @@
+#ifndef {{ cookiecutter.project_slug.upper() }}_CONFIG_HPP
+#define {{ cookiecutter.project_slug.upper() }}_CONFIG_HPP
+
+namespace {{ cookiecutter.project_slug }}::cmake {
+  static constexpr std::string_view project_name = "@PROJECT_NAME@";
+  static constexpr std::string_view project_version = "@PROJECT_VERSION@";
+  static constexpr int project_version_major { @PROJECT_VERSION_MAJOR@ };
+  static constexpr int project_version_minor { @PROJECT_VERSION_MINOR@ };
+  static constexpr int project_version_patch { @PROJECT_VERSION_PATCH@ };
+  static constexpr int project_version_tweak { @PROJECT_VERSION_TWEAK@ };
+  static constexpr std::string_view git_sha = "@GIT_SHA@";
+} // namespace {{ cookiecutter.project_slug }}::cmake
+
+#endif  // {{ cookiecutter.project_slug.upper() }}_CONFIG_HPP

@@ -1,0 +1,34 @@
+{
+    "project_name": "CMake Conan Cookiecutter",
+    "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+    "description": "Behold My Awesome Project!",
+    "test_engine": [
+      "gtest",
+      "Catch2",
+      "None"
+    ],
+    "make_cli": "n",
+    "use_ninja": "y",
+    "include_constexpr_tests": "{% if cookiecutter.test_engine == 'Catch2' %}y{% else %}N/A (only with Catch2){% endif %}",
+    "author_name": "Julien Marrec",
+    "github_organization": "jmarrec",
+    "github_repo": "{{ cookiecutter.project_name|replace(' ', '-')|replace('.', '-')|trim() }}",
+    "open_source_license": [
+      "MIT",
+      "BSD",
+      "GPLv3",
+      "Apache Software License 2.0",
+      "Not open source"
+    ],
+    "build_type": [
+      "Debug",
+      "Release",
+      "RelWithDebInfo"
+    ],
+    "compiler": [
+      "default",
+      "GCC",
+      "Clang",
+      "Clang-15"
+    ]
+}
