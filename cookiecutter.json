@@ -30,5 +30,10 @@
       "GCC",
       "Clang",
       "Clang-15"
+    ],
+    "_copy_without_render": [
+      "*.sh",
+      ".devcontainer",
+      ".devcontainer/git-prompt.sh"
     ]
 }
