@@ -15,6 +15,7 @@ CMakeUserPresets.json
 !.vscode/launch.json
 !.vscode/extensions.json
 *.swp
+*.swo
 *~
 _ReSharper*
 *.log

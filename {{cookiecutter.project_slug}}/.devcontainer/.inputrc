@@ -1,0 +1,74 @@
+########################################################################################
+#   R E A D L I N E    C O N F I G U R A T I O N   B Y    J U L I E N    M A R R E C
+########################################################################################
+
+# Visible = Don't ring the bell (sound), but show it as visible ([none, visible, audible])
+set bell-style none
+
+## Be more intelligent when autocompleting by also looking at the text after
+# the cursor. For example, when the current line is "cd ~/src/mozil", and
+# the cursor is on the "z", pressing Tab will not autocomplete it to "cd
+# ~/src/mozillail", but to "cd ~/src/mozilla". (This is supported by the
+# Readline used by Bash 4.)
+set skip-completed-text on
+
+# Ignore case when doing completion (allows completing 'docu' to 'Documents' instead)
+set completion-ignore-case on
+# Treat "-" and "_" as equivalent when performing case-insensitive filename matching
+set completion-map-case on
+# Match "." (hidden files) even if the '.' ins't supplied
+set match-hidden-files on
+# Show extra file information when completing, like `ls -F` does
+# set visible-stats on
+# Add colors for directories versus Files, etc
+set colored-stats on
+# Display the common prefix as a different colors
+# Note: works in bash 4.4+ only (Ubuntu 16.04 is 4.3.48), enabling it for future
+set colored-completion-prefix on
+
+# Briefly move the cursor to an opening parenthesis when a closing parenthesis is inserted
+# set blink-matching-paren on
+
+# List all matches in case multiple possible completions are possible instead of ringing the bell
+# => words are partially completed to the point where there is ambiguity AND print all completions in one step
+# I don't like this, slower...
+set show-all-if-ambiguous off
+
+# If set to ‘on’, words which have more than one possible completion without any possible partial completion
+# (the possible completions don’t share a common prefix)
+# cause the matches to be listed immediately instead of ringing the bell
+set show-all-if-unmodified on
+
+# Note: I set ambiguous to off and unmodified to on so that we always just
+# complete to the point where we cannot anymore, then we show in one go
+# That's the least disruptive while still being truly helpful IMHO
+
+
+# Not sure I like this behavior in irb/pry personally, clutters the display too much perhaps
+# Show all autocomplete results at once (without using the '--more--'
+# set page-completions off
+
+# Turn it on
+set page-completions on
+
+# If there are more than X possible completions for a word, ask to show them all
+# I set it to 30 mostly for pry, I want to avoid triggering autocomplete results too often,
+# I want to generally be able to see the lines of code above
+set completion-query-items 31
+
+# Use the text that has already been typed as the prefix for searching through
+# commands (i.e. more intelligent Up/Down behavior)
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+# Already maps HOME/END keys in /etc/inputrc on Linux for term=rxvt, but can't hurt
+"\e[7~": beginning-of-line
+"\e[8~": end-of-line
+#
+# Allow UTF-8 input and output, instead of showing stuff like $'\0123\0456'
+set input-meta on
+set output-meta on
+set convert-meta off
+
+# Use Alt/Meta + Delete (Retour Arrière) to delete the preceding word
+"\e[3;3~": kill-word
