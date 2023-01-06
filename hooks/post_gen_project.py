@@ -64,9 +64,10 @@ def main():
     elif "{{ cookiecutter.include_constexpr_tests }}".lower() != "y":
         remove_constexpr_tests()
 
-    configure()
+    if "{{ cookiecutter.auto_build }}".lower() != "y":
+        configure()
+        build()
 
-    build()
 
 if __name__ == "__main__":
     main()
