@@ -29,10 +29,15 @@ jobs:
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
-      uses: docker/metadata-action@v3
+      uses: docker/metadata-action@v4
       with:
         images: jmarrec/cookiecutter-cpp-cmake-conan-gcc11-clang15
         tags: ${{ env.VARIANT }}
+
+    - name: Debug
+      run: |
+        ls -la
+        find . -name Dockerfile
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v3
