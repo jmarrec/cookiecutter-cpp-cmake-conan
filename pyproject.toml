@@ -64,7 +64,9 @@ minversion = "6.0"
 # --cov='tests'
 # # Include lines missed in coverage
 # --cov-report=term-missing
-addopts = "--verbose --tb=short -rfEsxX --cov='hooks' --cov='tests' --cov-report=term-missing"
+# Coverage is pointless really here, since the hooks stuff is rendered to another file before it's executed
+
+addopts = "--verbose --tb=short -rfEsxX"
 norecursedirs = [".tox", ".git", ".github", "*/migrations/*", "*/static/*", "docs", "venv", "*/{{cookiecutter.project_slug}}/*"]
 testpaths = [
     "tests",
