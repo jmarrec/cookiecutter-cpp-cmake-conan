@@ -24,6 +24,7 @@ $ cookiecutter https://github.com/jmarrec/cookiecutter-cpp-cmake-conan
 
 It will ask for a few questions. The project_slug is going to become your new folder in which the new project files reside.
 
+![cookiecutter-cpp-cmake-conan-demo](https://user-images.githubusercontent.com/5479063/211117435-b7e2cae6-c877-4a97-a94b-4aeb1a0c5c8c.gif)
 
 ### Options
 
