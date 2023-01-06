@@ -20,6 +20,7 @@ exclude = '''
 '''
 
 [tool.isort]
+profile = "black"
 multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
@@ -27,7 +28,7 @@ use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 120
 skip_gitignore = true
-# you can skip files as below
+# you can skip files like this:
 #skip_glob = docs/conf.py
 
 [tool.pytest.ini_options]

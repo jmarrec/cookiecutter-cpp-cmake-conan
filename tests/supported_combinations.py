@@ -1,12 +1,15 @@
+"""Support tools to update the tests."""
 import itertools
 import json
 from pathlib import Path
+from typing import List
 
 TEST_DIR = Path(__file__).resolve().parent
 COOKIECUTTER_FILE = (TEST_DIR / "../cookiecutter.json").resolve()
 
 
-def get_supported_combinations(cookiecutter_file: Path) -> [dict]:
+def get_supported_combinations(cookiecutter_file: Path) -> List[dict]:
+    """Gets all possible combinations."""
     with open(cookiecutter_file, "r") as f:
         data = json.load(f)
     result = []
@@ -24,7 +27,7 @@ def get_supported_combinations(cookiecutter_file: Path) -> [dict]:
 
 
 def get_build_combinations(cookiecutter_file: Path):
-
+    """Gets all build combinations, for the auto_build test."""
     BUILD_OPTIONS = [
         "build_type",
         "compiler",
@@ -39,6 +42,7 @@ def get_build_combinations(cookiecutter_file: Path):
     allNames = sorted(build_opts)
     combinations = itertools.product(*(build_opts[Name] for Name in allNames))
     result = [dict(zip(allNames, c)) for c in combinations]
+    return result
 
 
 if __name__ == "__main__":

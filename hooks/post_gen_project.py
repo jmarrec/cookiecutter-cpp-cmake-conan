@@ -76,7 +76,7 @@ def configure():
         raise CMakeConfigureError(" ".join(cmd)) from e
 
 
-def build(allow_failure: bool = False):
+def build(allow_failure: bool = False) -> bool:
     """Build the project."""
     print("=" * 120)
     print("Building")

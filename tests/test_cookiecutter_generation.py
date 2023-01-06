@@ -1,3 +1,7 @@
+"""Py.test module for the cookiecutter cpp-conan-cmake.
+
+This makes use of pytest-cookies.
+"""
 import os
 import re
 from pathlib import Path
@@ -11,6 +15,7 @@ RE_OBJ = re.compile(PATTERN)
 
 @pytest.fixture
 def context():
+    """Py.test fixture that provides some default context."""
     return {
         "project_name": "Test cookiecutter-cpp-cmake-conan",
         "project_slug": "test_cookiecutter_cpp_cmake_conan",
@@ -72,7 +77,6 @@ def check_paths(paths):
 @pytest.mark.parametrize("context_override", SUPPORTED_COMBINATIONS, ids=_fixture_id)
 def test_project_generation(cookies, context, context_override):
     """Test that project is generated and fully rendered."""
-
     result = cookies.bake(extra_context={**context, **context_override})
     assert result.exit_code == 0
     assert result.exception is None
@@ -85,6 +89,7 @@ def test_project_generation(cookies, context, context_override):
 
 
 def test_test_engine_gtest(cookies, context):
+    """Tests that when Gtest is selected the constexpr tests are removed."""
     result = cookies.bake(extra_context={**context, **{"test_engine": "gtest", "include_constexpr_tests": "y"}})
     assert result.exit_code == 0
     assert result.exception is None
@@ -96,6 +101,7 @@ def test_test_engine_gtest(cookies, context):
 
 
 def test_test_engine_Catch2_no_constexpr(cookies, context):
+    """Test when Catch2 and we say no to constexpr tests, they are removed."""
     result = cookies.bake(extra_context={**context, **{"test_engine": "Catch2", "include_constexpr_tests": "n"}})
     assert result.exit_code == 0
     assert result.exception is None
@@ -107,6 +113,7 @@ def test_test_engine_Catch2_no_constexpr(cookies, context):
 
 
 def test_test_engine_Catch2_constexpr(cookies, context):
+    """Test when Catch2 and we say yes to constexpr tests, they are not removed."""
     result = cookies.bake(extra_context={**context, **{"test_engine": "Catch2", "include_constexpr_tests": "y"}})
     assert result.exit_code == 0
     assert result.exception is None
@@ -150,7 +157,6 @@ AUTO_BUILD_CONFIGURATIONS = [
 @pytest.mark.parametrize("context_override", AUTO_BUILD_CONFIGURATIONS, ids=_fixture_id)
 def test_auto_build(cookies, context, context_override):
     """Test that project is generated and fully rendered."""
-
     result = cookies.bake(extra_context={**context, **{"auto_build": "y"}, **context_override})
     assert result.exit_code == 0
     assert result.exception is None
