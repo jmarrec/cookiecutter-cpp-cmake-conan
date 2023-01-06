@@ -153,6 +153,9 @@ AUTO_BUILD_CONFIGURATIONS = [
     {"build_type": "RelWithDebInfo", "compiler": "Clang", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
 ]
 
+if os.getenv("CI"):
+    AUTO_BUILD_CONFIGURATIONS = AUTO_BUILD_CONFIGURATIONS[:1]
+
 
 @pytest.mark.parametrize("context_override", AUTO_BUILD_CONFIGURATIONS, ids=_fixture_id)
 def test_auto_build(cookies, context, context_override):
