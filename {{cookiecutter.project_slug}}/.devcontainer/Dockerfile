@@ -92,7 +92,7 @@ RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     build-essential libssl-dev zlib1g-dev \
     libbz2-dev libreadline-dev libsqlite3-dev curl llvm \
     libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev \
-    jq patchelf fzf &&\
+    jq patchelf &&\
     mkdir cppcheck && cd cppcheck &&\
     wget https://github.com/danmar/cppcheck/archive/${CPPCHECK_VERSION}.tar.gz &&\
     tar xfz ${CPPCHECK_VERSION}.tar.gz &&\
@@ -100,7 +100,8 @@ RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     cd build &&\
     cmake -DCMAKE_BUILD_TYPE=Release ../cppcheck-$CPPCHECK_VERSION/ &&\
     make -j $(nproc) &&\
-    make install
+    make install &&\
+    [ "${VARIANT}" != "bionic" ] && apt-get install -y --no-install-recommends fzf
 
 # Install Rust for some CLI tools
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y --no-modify-path &&\
