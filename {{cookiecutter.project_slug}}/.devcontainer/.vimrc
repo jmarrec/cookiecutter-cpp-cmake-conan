@@ -187,7 +187,7 @@ call plug#begin('~/.vim/plugged')
 
     " Apparently YCM moved away from tern to TSServer...
     " Tern-based JavaScript editing support
-    Plug 'ternjs/tern_for_vim', {'do':'npm install'}
+    " Plug 'ternjs/tern_for_vim', {'do':'npm install'}
 
     Plug 'dart-lang/dart-vim-plugin'
 
@@ -234,7 +234,7 @@ call plug#begin('~/.vim/plugged')
     " Especially sudo npm -g install instant-markdown-d
     " This plugin opens a browser window to render your markdown file in real
     " time
-    Plug 'instant-markdown/vim-instant-markdown'
+    " Plug 'instant-markdown/vim-instant-markdown'
 
     " CATEGORY: UNUSED
     " LaTeX
