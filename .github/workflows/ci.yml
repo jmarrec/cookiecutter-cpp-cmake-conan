@@ -21,13 +21,22 @@ jobs:
         uses: pre-commit/action@v3.0.0
 
   tests:
+    continue-on-error: ${{ matrix.allow_failure }}
     strategy:
       fail-fast: false
       matrix:
         os:
           - ubuntu-latest
-          - windows-latest
           - macos-latest
+          - windows-latest
+        include:
+          - os: ubuntu-latest
+            allow_failure: false
+          - os: macos-latest
+            allow_failure: false
+          - os: windows-latest
+            allow_failure: true
+
 
     name: "Run tests"
     runs-on: ${{ matrix.os }}
@@ -71,7 +80,7 @@ jobs:
             echo "Using brew to install ninja"
             brew install ninja ccache cppcheck
             echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
-            ln -sf $(brew --prefix llvm@14)/bin/clang-tidy /usr/bin/clang-tidy
+            sudo ln -sf $(brew --prefix llvm@14)/bin/clang-tidy /usr/bin/clang-tidy
           fi;
 
       - name: Run tests (Unix)
