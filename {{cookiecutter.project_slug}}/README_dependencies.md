@@ -11,6 +11,7 @@ Note about install commands:
 This is a really long list of dependencies, and it's easy to mess up. That's why:
 
 #### Docker
+
 We have a Docker image that's already set up for you. See the [Docker instructions](#docker-instructions).
 
 #### Setup-cpp
@@ -208,29 +209,3 @@ The following compilers should work:
 	Follow instructions here:
 	https://github.com/include-what-you-use/include-what-you-use#how-to-install
 	</details>
-
-#### GUI libraries
-This project can be made to work with several optional GUI frameworks.
-
-If desired, you should install the following optional dependencies as
-directed by their documentation, linked here:
-
-- [FLTK](https://www.fltk.org/doc-1.4/index.html)
-- [GTKMM](https://www.gtkmm.org/en/documentation.html)
-- [QT](https://doc.qt.io/)
-
-The following dependencies can be downloaded automatically by CMake and Conan.
-All you need to do to install them is to turn on a CMake flag during
-configuration.
-If you run into difficulty using them, please refer to their documentation,
-linked here:
-
-- [NANA](http://nanapro.org/en-us/documentation/)
-- [SDL](http://wiki.libsdl.org/FrontPage)
-- [IMGUI](https://github.com/ocornut/imgui/tree/master/docs):
-  This framework depends on SFML, and if you are using Linux, you may need
-  to install several of SFML's dependencies using your package manager. See
-  [the SFML build tutorial](https://www.sfml-dev.org/tutorials/2.5/compile-with-cmake.php)
-  for specifics.
-
-
