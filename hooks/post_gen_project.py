@@ -15,8 +15,9 @@ except ImportError:
 
 class CMakeConfigureError(Exception):
     """An exception class for the cmake configuration."""
+
     def __init__(self, *args, **kwargs):
-        default_message = 'CMake Configure Error'
+        default_message = "CMake Configure Error"
         if args:
             super().__init__(*args, **kwargs)
         else:
@@ -25,12 +26,14 @@ class CMakeConfigureError(Exception):
 
 class BuildError(Exception):
     """An exception class for the build."""
+
     def __init__(self):
         super().__init__("Build Error")
 
 
 class CTestError(Exception):
     """An exception class for the CTest run."""
+
     def __init__(self):
         super().__init__("CTest Error")
 
@@ -56,10 +59,9 @@ def configure():
     """Configure the project via CMake."""
     print("=" * 120)
     print(f"Configuring cmake in build dir {BUILD_DIR}")
-    cmd = ["cmake", "-S", ".", "-B", str(BUILD_DIR),
-           "-DCMAKE_BUILD_TYPE:STRING={{ cookiecutter.build_type }}"]
+    cmd = ["cmake", "-S", ".", "-B", str(BUILD_DIR), "-DCMAKE_BUILD_TYPE:STRING={{ cookiecutter.build_type }}"]
     if "{{ cookiecutter.use_ninja }}".lower() != "n":
-        cmd += ["-G" , "Ninja"]
+        cmd += ["-G", "Ninja"]
     print("command =" + " ".join(cmd))
     env = os.environ
     if "{{ cookiecutter.compiler }}" == "GCC":

@@ -1,14 +1,9 @@
 import os
 import re
-import sys
 from pathlib import Path
 
 import pytest
-
-#import yaml
 from binaryornot.check import is_binary
-#from cookiecutter.exceptions import FailedHookException
-
 
 PATTERN = r"{{(\s?cookiecutter)[.](.*?)}}"
 RE_OBJ = re.compile(PATTERN)
@@ -26,28 +21,29 @@ def context():
         "auto_build": "n",
     }
 
+
 # SUPPORTED_COMBINATIONS = supported_combinations.get_supported_combinations(supported_combinations.COOKIECUTTER_FILE)
 SUPPORTED_COMBINATIONS = [
-    {'make_cli': 'y'},
-    {'make_cli': 'n'},
-    {'test_engine': 'gtest'},
-    {'test_engine': 'Catch2'},
-    {'test_engine': 'None'},
-    {'open_source_license': 'MIT'},
-    {'open_source_license': 'BSD'},
-    {'open_source_license': 'GPLv3'},
-    {'open_source_license': 'Apache Software License 2.0'},
-    {'open_source_license': 'Not open source'},
+    {"make_cli": "y"},
+    {"make_cli": "n"},
+    {"test_engine": "gtest"},
+    {"test_engine": "Catch2"},
+    {"test_engine": "None"},
+    {"open_source_license": "MIT"},
+    {"open_source_license": "BSD"},
+    {"open_source_license": "GPLv3"},
+    {"open_source_license": "Apache Software License 2.0"},
+    {"open_source_license": "Not open source"},
     # {'auto_build': 'y'},
     # {'auto_build': 'n'},
-    {'build_type': 'Debug'},
-    {'build_type': 'Release'},
-    {'build_type': 'RelWithDebInfo'},
-    {'compiler': 'default'},
-    {'compiler': 'GCC'},
-    {'compiler': 'Clang'},
-    {'use_ninja': 'y'},
-    {'use_ninja': 'n'},
+    {"build_type": "Debug"},
+    {"build_type": "Release"},
+    {"build_type": "RelWithDebInfo"},
+    {"compiler": "default"},
+    {"compiler": "GCC"},
+    {"compiler": "Clang"},
+    {"use_ninja": "y"},
+    {"use_ninja": "n"},
 ]
 
 
@@ -58,11 +54,7 @@ def _fixture_id(ctx):
 
 def build_files_list(root_dir):
     """Build a list containing absolute paths to the generated files."""
-    return [
-        os.path.join(dirpath, file_path)
-        for dirpath, subdirs, files in os.walk(root_dir)
-        for file_path in files
-    ]
+    return [os.path.join(dirpath, file_path) for dirpath, subdirs, files in os.walk(root_dir) for file_path in files]
 
 
 def check_paths(paths):
@@ -99,8 +91,9 @@ def test_test_engine_gtest(cookies, context):
     assert result.project_path.name == context["project_slug"]
     assert result.project_path.is_dir()
     assert isinstance(result.project_path, Path)
-    assert (result.project_path / 'test').is_dir()
-    assert not (result.project_path / 'test' / 'constexpr_tests.cpp').is_file()
+    assert (result.project_path / "test").is_dir()
+    assert not (result.project_path / "test" / "constexpr_tests.cpp").is_file()
+
 
 def test_test_engine_Catch2_no_constexpr(cookies, context):
     result = cookies.bake(extra_context={**context, **{"test_engine": "Catch2", "include_constexpr_tests": "n"}})
@@ -109,8 +102,9 @@ def test_test_engine_Catch2_no_constexpr(cookies, context):
     assert result.project_path.name == context["project_slug"]
     assert result.project_path.is_dir()
     assert isinstance(result.project_path, Path)
-    assert (result.project_path / 'test').is_dir()
-    assert not (result.project_path / 'test' / 'constexpr_tests.cpp').is_file()
+    assert (result.project_path / "test").is_dir()
+    assert not (result.project_path / "test" / "constexpr_tests.cpp").is_file()
+
 
 def test_test_engine_Catch2_constexpr(cookies, context):
     result = cookies.bake(extra_context={**context, **{"test_engine": "Catch2", "include_constexpr_tests": "y"}})
@@ -119,37 +113,37 @@ def test_test_engine_Catch2_constexpr(cookies, context):
     assert result.project_path.name == context["project_slug"]
     assert result.project_path.is_dir()
     assert isinstance(result.project_path, Path)
-    assert (result.project_path / 'test').is_dir()
-    assert (result.project_path / 'test' / 'constexpr_tests.cpp').is_file()
+    assert (result.project_path / "test").is_dir()
+    assert (result.project_path / "test" / "constexpr_tests.cpp").is_file()
 
 
 AUTO_BUILD_CONFIGURATIONS = [
-   {'build_type': 'Release', 'compiler': 'default', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'Release', 'compiler': 'default', 'make_cli': 'n', 'test_engine': 'Catch2', 'use_ninja': 'y'},
-   {'build_type': 'Release', 'compiler': 'default', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'},
-   {'build_type': 'Release', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'Release', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'Catch2', 'use_ninja': 'y'},
-   {'build_type': 'Release', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'},
-   {'build_type': 'Release', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'Release', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'Catch2', 'use_ninja': 'y'},
-   {'build_type': 'Release', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'},
-   {'build_type': 'Debug', 'compiler': 'default', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'Debug', 'compiler': 'default', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'},
-   {'build_type': 'Debug', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'Debug', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'Catch2', 'use_ninja': 'y'},
-   {'build_type': 'Debug', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'},
-   {'build_type': 'Debug', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'Debug', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'Catch2', 'use_ninja': 'y'},
-   {'build_type': 'Debug', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'default', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'default', 'make_cli': 'n', 'test_engine': 'Catch2', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'default', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'Catch2', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'GCC', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'gtest', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'Catch2', 'use_ninja': 'y'},
-   {'build_type': 'RelWithDebInfo', 'compiler': 'Clang', 'make_cli': 'n', 'test_engine': 'None', 'use_ninja': 'y'}
+    {"build_type": "Release", "compiler": "default", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "Release", "compiler": "default", "make_cli": "n", "test_engine": "Catch2", "use_ninja": "y"},
+    {"build_type": "Release", "compiler": "default", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
+    {"build_type": "Release", "compiler": "GCC", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "Release", "compiler": "GCC", "make_cli": "n", "test_engine": "Catch2", "use_ninja": "y"},
+    {"build_type": "Release", "compiler": "GCC", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
+    {"build_type": "Release", "compiler": "Clang", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "Release", "compiler": "Clang", "make_cli": "n", "test_engine": "Catch2", "use_ninja": "y"},
+    {"build_type": "Release", "compiler": "Clang", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
+    {"build_type": "Debug", "compiler": "default", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "Debug", "compiler": "default", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
+    {"build_type": "Debug", "compiler": "GCC", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "Debug", "compiler": "GCC", "make_cli": "n", "test_engine": "Catch2", "use_ninja": "y"},
+    {"build_type": "Debug", "compiler": "GCC", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
+    {"build_type": "Debug", "compiler": "Clang", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "Debug", "compiler": "Clang", "make_cli": "n", "test_engine": "Catch2", "use_ninja": "y"},
+    {"build_type": "Debug", "compiler": "Clang", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "default", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "default", "make_cli": "n", "test_engine": "Catch2", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "default", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "GCC", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "GCC", "make_cli": "n", "test_engine": "Catch2", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "GCC", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "Clang", "make_cli": "n", "test_engine": "gtest", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "Clang", "make_cli": "n", "test_engine": "Catch2", "use_ninja": "y"},
+    {"build_type": "RelWithDebInfo", "compiler": "Clang", "make_cli": "n", "test_engine": "None", "use_ninja": "y"},
 ]
 
 
@@ -165,4 +159,3 @@ def test_auto_build(cookies, context, context_override):
     build_dir = result.project_path.parent / f"{result.project_path.name}-build-{build_type}"
     assert build_dir.is_dir()
     # Run ctest?
-
