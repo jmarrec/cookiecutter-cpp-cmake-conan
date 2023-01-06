@@ -101,7 +101,7 @@ RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     cmake -DCMAKE_BUILD_TYPE=Release ../cppcheck-$CPPCHECK_VERSION/ &&\
     make -j $(nproc) &&\
     make install &&\
-    [ "${VARIANT}" != "bionic" ] && apt-get install -y --no-install-recommends fzf
+    if [ "${VARIANT}" != "bionic" ]; then apt-get install -y --no-install-recommends fzf; fi;
 
 # Install Rust for some CLI tools
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y --no-modify-path &&\
