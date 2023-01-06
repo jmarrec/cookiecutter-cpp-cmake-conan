@@ -13,21 +13,47 @@ except ImportError:
     HAS_RICH = False
 
 
+class CMakeConfigureError(Exception):
+    """An exception class for the cmake configuration."""
+    def __init__(self, *args, **kwargs):
+        default_message = 'CMake Configure Error'
+        if args:
+            super().__init__(*args, **kwargs)
+        else:
+            super().__init__(default_message, **kwargs)
+
+
+class BuildError(Exception):
+    """An exception class for the build."""
+    def __init__(self):
+        super().__init__("Build Error")
+
+
+class CTestError(Exception):
+    """An exception class for the CTest run."""
+    def __init__(self):
+        super().__init__("CTest Error")
+
+
 def remove_open_source_files():
+    """Remove the license and co."""
     file_names = ["CONTRIBUTORS.txt", "LICENSE"]
     for file_name in file_names:
         Path(file_name).unlink(missing_ok=True)
 
 
 def remove_test_folder():
+    """Remove the test folder when no engine is selected."""
     shutil.rmtree("test")
 
 
 def remove_constexpr_tests():
+    """Remove the constexpr tests."""
     Path("test/constexpr_tests.cpp").unlink(missing_ok=False)
 
 
 def configure():
+    """Configure the project via CMake."""
     print("=" * 120)
     print(f"Configuring cmake in build dir {BUILD_DIR}")
     cmd = ["cmake", "-S", ".", "-B", str(BUILD_DIR),
@@ -42,22 +68,33 @@ def configure():
     elif "{{ cookiecutter.compiler }}" == "Clang":
         env["CC"] = "clang"
         env["CXX"] = "clang++"
-    subprocess.check_call(cmd, stderr=sys.stderr, stdout=sys.stdout, env=env)
+    try:
+        subprocess.check_call(cmd, stderr=sys.stderr, stdout=sys.stdout, env=env)
+    except subprocess.CalledProcessError as e:
+        raise CMakeConfigureError(" ".join(cmd)) from e
 
 
 def build(allow_failure: bool = False):
+    """Build the project."""
     print("=" * 120)
     print("Building")
     try:
         subprocess.check_call(["cmake", "--build", str(BUILD_DIR)], stderr=sys.stderr, stdout=sys.stdout)
-    except Exception as e:
+    except subprocess.CalledProcessError as e:
         print(f"Failed to build: {e}")
         if not allow_failure:
-            raise e
+            raise BuildError() from e
+        return False
+
+    return True
 
 
-def test():
-    subprocess.check_call(["ctest", "--test-dir", str(BUILD_DIR)], stderr=sys.stderr, stdout=sys.stdout)
+def ctest():
+    """Run CTest"""
+    try:
+        subprocess.check_call(["ctest", "--test-dir", str(BUILD_DIR)], stderr=sys.stderr, stdout=sys.stdout)
+    except subprocess.CalledProcessError as e:
+        raise CTestError() from e
 
 
 def main():
@@ -71,8 +108,9 @@ def main():
 
     if "{{ cookiecutter.auto_build }}".lower() == "y":
         configure()
-        build()
-        ctest()
+        ok = build()
+        if ok:
+            ctest()
 
 
 if __name__ == "__main__":

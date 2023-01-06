@@ -1,0 +1,41 @@
+# pyproject.toml
+[tool.pytest.ini_options]
+minversion = "6.0"
+# # Shows a line for every test
+# # You probably want to turn this off if you use pytest-sugar.
+# # Or you can keep it and run `py.test -q`.
+# --verbose
+#
+# # Shorter tracebacks are sometimes easier to read
+# --tb=short
+# #--tb=long
+#
+# # Find worrysome warnings by throwing on them
+# # -W error::FutureWarning
+# # -W error::DeprecationWarning
+#
+# # Turn on --capture to have brief, less noisy output.
+# # You will only see output if the test fails.
+# # Use --capture no (same as -s) if you want to see it all or have problems
+# # debugging.
+# # --capture=fd
+# # --capture=no
+#
+# # Show extra test summary info as specified by chars (f)ailed, (E)error, (s)skipped, (x)failed, (X)passed.
+# -rfEsxX
+#
+# # Output test results to junit.xml for Pipelines to consume
+# # has to be in a specially named directory like test-reports, and with a depth of 3 levels: ./**/test-reports/**/*.xml
+# --junitxml=tests/test-reports/junit/junit.xml
+#
+# # Measure code coverage for all files in the module itself and the tests folder
+# --cov='hooks'
+# --cov='tests'
+# # Include lines missed in coverage
+# --cov-report=term-missing
+addopts = "--verbose --tb=short -rfEsxX --cov='hooks' --cov-report=term-missing --cov='tests'"
+norecursedirs = [".tox", ".git", ".github", "*/migrations/*", "*/static/*", "docs", "venv", "*/{{cookiecutter.project_slug}}/*"]
+testpaths = [
+    "tests",
+    "integration",
+]
