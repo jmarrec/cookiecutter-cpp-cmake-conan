@@ -40,9 +40,6 @@ def configure():
     elif "{{ cookiecutter.compiler }}" == "Clang":
         env["CC"] = "clang"
         env["CXX"] = "clang++"
-    elif "{{ cookiecutter.compiler }}" == "Clang-15":
-        env["CC"] = "clang-15"
-        env["CXX"] = "clang++-15"
     subprocess.check_call(cmd, stderr=sys.stderr, stdout=sys.stdout, env=env)
 
 
@@ -64,7 +61,7 @@ def main():
     elif "{{ cookiecutter.include_constexpr_tests }}".lower() != "y":
         remove_constexpr_tests()
 
-    if "{{ cookiecutter.auto_build }}".lower() != "y":
+    if "{{ cookiecutter.auto_build }}".lower() == "y":
         configure()
         build()
 
