@@ -42,7 +42,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v3
       with:
-        context: ./{{cookiecutter.project_slug}}/.devcontainer
+        context: ./{{{{cookiecutter.project_slug}}}}/.devcontainer
         file: ./{{cookiecutter.project_slug}}/.devcontainer/Dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
