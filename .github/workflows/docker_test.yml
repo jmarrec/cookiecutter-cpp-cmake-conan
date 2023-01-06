@@ -43,7 +43,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: ./\{{cookiecutter.project_slug}}/.devcontainer
-        file: ./\{{cookiecutter.project_slug}}/.devcontainer/Dockerfile
+        file: ./{{{{raw}}}}{{cookiecutter.project_slug}}{{{{/raw}}}}/.devcontainer/Dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
