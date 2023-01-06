@@ -8,14 +8,15 @@ concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
-env:
-  VARIANT: focal
-
 jobs:
 
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        VARIANT: [bionic, focal, jammy]
 
     steps:
 
@@ -38,7 +39,7 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: jmarrec/cookiecutter-cpp-cmake-conan-gcc11-clang15
-        tags: ${{ env.VARIANT }}
+        tags: ${{ matrix.VARIANT }}
 
     - name: Debug
       run: |
@@ -55,5 +56,5 @@ jobs:
         build-args: |
           GCC_VER=11
           LLVM_VER=15
-          VARIANT=${{ env.VARIANT }}
+          VARIANT=${{ matrix.VARIANT }}
         platforms: linux/amd64,linux/arm64
