@@ -12,10 +12,12 @@ try:
 except ImportError:
     HAS_RICH = False
 
+
 def remove_open_source_files():
     file_names = ["CONTRIBUTORS.txt", "LICENSE"]
     for file_name in file_names:
         Path(file_name).unlink(missing_ok=True)
+
 
 def remove_test_folder():
     shutil.rmtree("test")
@@ -43,13 +45,19 @@ def configure():
     subprocess.check_call(cmd, stderr=sys.stderr, stdout=sys.stdout, env=env)
 
 
-def build():
+def build(allow_failure: bool = False):
     print("=" * 120)
     print("Building")
     try:
         subprocess.check_call(["cmake", "--build", str(BUILD_DIR)], stderr=sys.stderr, stdout=sys.stdout)
     except Exception as e:
         print(f"Failed to build: {e}")
+        if not allow_failure:
+            raise e
+
+
+def test():
+    subprocess.check_call(["ctest", "--test-dir", str(BUILD_DIR)], stderr=sys.stderr, stdout=sys.stdout)
 
 
 def main():
@@ -58,12 +66,13 @@ def main():
 
     if "{{ cookiecutter.test_engine }}" == "None":
         remove_test_folder()
-    elif "{{ cookiecutter.include_constexpr_tests }}".lower() != "y":
+    elif "{{ cookiecutter.test_engine }}" != "Catch2" or "{{ cookiecutter.include_constexpr_tests }}".lower() != "y":
         remove_constexpr_tests()
 
     if "{{ cookiecutter.auto_build }}".lower() == "y":
         configure()
         build()
+        ctest()
 
 
 if __name__ == "__main__":
