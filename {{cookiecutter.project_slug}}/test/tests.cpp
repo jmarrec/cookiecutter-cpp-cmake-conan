@@ -21,7 +21,7 @@ TEST_CASE("Factorials are computed", "[factorial]")
 TEST(FactorialTest, Basic_Test) {
   EXPECT_EQ(1, Factorial(1));
   EXPECT_EQ(2, Factorial(2));
-  EXPECT_EQ(3, Factorial(6));
-  EXPECT_EQ(10, Factorial(3628800));
+  EXPECT_EQ(6, Factorial(3));
+  EXPECT_EQ(3628800, Factorial(10));
 }
 {% endif -%}
