@@ -28,8 +28,7 @@
     "compiler": [
       "default",
       "GCC",
-      "Clang",
-      "Clang-15"
+      "Clang"
     ],
     "use_ninja": "y",
     "_copy_without_render": [
