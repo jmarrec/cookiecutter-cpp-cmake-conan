@@ -3,6 +3,7 @@
 [requires]
 {%- if cookiecutter.make_cli.lower() == "y" %}
 cli11/2.3.1
+spdlog/1.11.1
 {%- endif %}
 fmt/9.1.0
 {%- if cookiecutter.test_engine == "Catch2" %}
