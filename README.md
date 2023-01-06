@@ -25,7 +25,7 @@ $ cookiecutter https://github.com/jmarrec/cookiecutter-cpp-cmake-conan
 It will ask for a few questions. The project_slug is going to become your new folder in which the new project files reside.
 
 
-### Features/Options
+### Options
 
 * `test_engine`: `Catch2`, `gtest` or `None`.
     * If Catch2, option to include `constexpr` tests or not
@@ -35,3 +35,16 @@ It will ask for a few questions. The project_slug is going to become your new fo
     * `build_type`: passed as `-DCMAKE_BUILD_TYPE:STRING=XXX`
     * `use_ninja`: if `y` it will append `-G Ninja` to the configure script
 
+### Features
+
+I have configured [Dockerfile](%7B%7Bcookiecutter.project_slug%7D%7D/.devcontainer/Dockerfile) for my taste (with a subset of my dotfiles) so I have a familiar environment to use.
+Some images are posted on my Dockerhub, eg [jmarrec/cookiecutter-cpp-cmake-conan-gcc11-clang15](https://hub.docker.com/repository/docker/jmarrec/cookiecutter-cpp-cmake-conan-gcc11-clang15/general)
+
+# TODO / Roadmap
+
+* I think there are too many dependencies on small external scripts and actions for my taste, things are likely to break.
+    * At least for the Github Actions ci.yml, I'd like to remove the dependency on setup-cpp action
+        * It's failing
+        * It's opaque
+        * It currently tries to build too many configurations
+* Add (an option to use?) a library (`add_library`) and use that in tests and fuzzing tests.
