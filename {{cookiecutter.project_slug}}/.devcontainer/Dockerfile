@@ -54,7 +54,8 @@ RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - 2>/dev/
 # Set-up LLVM's linker as the default one, but allow easy switching
 RUN update-alternatives --install /usr/bin/clang clang $(which clang-${LLVM_VER}) 100 \
                         --slave /usr/bin/clang++ clang++ $(which clang++-${LLVM_VER}) \
-                        --slave /usr/bin/clang-tidy clang-tidy $(which clang-tidy-${LLVM_VER}) &&\
+                        --slave /usr/bin/clang-tidy clang-tidy $(which clang-tidy-${LLVM_VER}) \
+                        --slave /usr/bin/lldb lldb $(which lldb-${LLVM_VER}) &&\
     update-alternatives --install /usr/bin/ld ld /usr/bin/ld.bfd 10 &&\
     update-alternatives --install /usr/bin/ld ld /usr/bin/ld.gold 20 &&\
     update-alternatives --install /usr/bin/ld ld /usr/bin/ld.lld-${LLVM_VER} 100
