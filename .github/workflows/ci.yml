@@ -80,8 +80,7 @@ jobs:
             echo "Using brew to install ninja"
             brew install ninja ccache cppcheck
             echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
-            echo $(brew --prefix llvm@14)/bin/clang-tidy
-            echo $(brew --prefix llvm@14)/bin/clang-tidy >> $GITHUB_PATH
+            echo $(brew --prefix llvm@14)/bin >> $GITHUB_PATH
           fi;
 
       - name: Run tests (Unix)
