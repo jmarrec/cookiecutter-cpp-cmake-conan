@@ -5,6 +5,11 @@ FROM ubuntu:${VARIANT}
 # Restate the variant to use it later on in the llvm and cmake installations
 ARG VARIANT
 
+#RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1001 ubuntu
+USER root
+ENV HOME="/home/root"
+WORKDIR ${HOME}
+
 # Install necessary packages available from standard repos
 RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
@@ -106,7 +111,7 @@ RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     tar xfz ${CPPCHECK_VERSION}.tar.gz &&\
     mkdir build &&\
     cd build &&\
-    cmake -DCMAKE_BUILD_TYPE=Release ../cppcheck-$CPPCHECK_VERSION/ &&\
+    cmake -DCMAKE_BUILD_TYPE=Release ../cppcheck-${CPPCHECK_VERSION}/ &&\
     make -j $(nproc) &&\
     make install &&\
     if [ "${VARIANT}" != "bionic" ]; then apt-get install -y --no-install-recommends fzf; fi;
@@ -137,9 +142,25 @@ RUN mkdir -p $(include-what-you-use -print-resource-dir 2>/dev/null)
 RUN ln -s $(readlink -f /usr/lib/clang/${LLVM_VER}/include) \
     $(include-what-you-use -print-resource-dir 2>/dev/null)/include
 
+# Install pyenv
+ENV PYENV_ROOT="${HOME}/.pyenv"
+ENV PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${PATH}"
+RUN git clone --depth=1 https://github.com/pyenv/pyenv.git ${PYENV_ROOT} &&\
+    git clone --depth=1 https://github.com/pyenv/pyenv-virtualenvwrapper.git ${PYENV_ROOT}/plugins/pyenv-virtualenvwrapper &&\
+    apt-get install build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl \
+            libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
+# Install specific python
+ENV PYTHON_VERSION=3.8.12
+ENV Python_ROOT_DIR="${PYENV_ROOT}/versions/${PYTHON_VERSION}"
+ENV PATH="${Python_ROOT_DIR}/bin:${PATH}"
+
+RUN PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install ${PYTHON_VERSION} &&\
+    pyenv global ${PYTHON_VERSION}
+
 # Install conan
-RUN python3 -m pip install --upgrade pip setuptools && \
-    python3 -m pip install conan==1.59.0 ipython twine requests packaging thefuck gcovr && \
+RUN python --version && python -m pip install --upgrade pip setuptools && \
+    python -m pip install conan==1.59.0 ipython twine requests packaging thefuck gcovr && \
     conan --version &&\
     conan profile new --detect default &&\
     conan profile update settings.compiler.libcxx=libstdc++11 default &&\
@@ -148,6 +169,23 @@ RUN python3 -m pip install --upgrade pip setuptools && \
 ## Cleanup cached apt data we don't need anymore
 RUN apt-get autoremove -y && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+
+RUN echo "Start by installing openssl 1.1.1o" &&\
+    wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1o.tar.gz &&\
+    tar xfz openssl-1.1.1o.tar.gz && cd openssl-1.1.1o &&\
+    ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl '-Wl,-rpath,$(LIBRPATH)' &&\
+    make --quiet -j $(nproc) && make install --quiet && rm -Rf openssl-1.1.o*
+
+RUN echo "Installing Ruby 2.7.2 via RVM" &&\
+    curl -sSL https://rvm.io/mpapis.asc | gpg --import - &&\
+    curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - &&\
+    curl -sSL https://get.rvm.io | bash -s stable &&\
+    usermod -a -G rvm root &&\
+    /usr/local/rvm/bin/rvm install 2.7.2 --with-openssl-dir=/usr/local/ssl/ -- --enable-static &&\
+    /usr/local/rvm/bin/rvm --default use 2.7.2
+
+ENV PATH="/usr/local/rvm/rubies/ruby-2.7.2/bin:${PATH}"
 
 # Include project
 #ADD . /workspaces/cpp_starter_project
