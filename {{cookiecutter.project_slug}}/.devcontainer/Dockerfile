@@ -76,12 +76,20 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
         | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
     apt-add-repository -y "deb ${CMAKE_URL} ${CMAKE_PKG} main" && \
     apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
-    apt-get install -y --no-install-recommends cmake cmake-curses-gui
+    rm -Rf /usr/share/keyrings/kitware-archive-keyring.gpg && \
+    apt-get install -y --no-install-recommends kitware-archive-keyring cmake cmake-curses-gui
 
 # Install editors
 RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
-        vim-gtk3 neovim emacs nano
+        vim-gtk3 neovim emacs nano locales
+
+# Set the locale
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Install optional dependencies
 ENV CPPCHECK_VERSION 2.9
@@ -131,7 +139,7 @@ RUN ln -s $(readlink -f /usr/lib/clang/${LLVM_VER}/include) \
 
 # Install conan
 RUN python3 -m pip install --upgrade pip setuptools && \
-    python3 -m pip install conan ipython twine requests packaging thefuck gcovr && \
+    python3 -m pip install conan==1.59.0 ipython twine requests packaging thefuck gcovr && \
     conan --version &&\
     conan profile new --detect default &&\
     conan profile update settings.compiler.libcxx=libstdc++11 default &&\
